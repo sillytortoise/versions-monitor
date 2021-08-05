@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>版本信息</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/css/uikit.min.css"/>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/viewerjs/1.10.0/viewer.css"/>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+          integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.1/dist/js/uikit-icons.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/viewerjs/1.10.0/viewer.common.js"></script>
+    <script type="text/javascript" src="./jquery.form.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+        .uk-button-large,
+        .uk-button-primary,
+        .uk-button-danger {
+            border-radius: 5px;
+        }
+
+        input {
+            height: 35px;
+            font-family: "Microsoft YaHei UI";
+            font-size: 18px;
+            vertical-align: bottom;
+            position: relative;
+            outline: none;
+        }
+
+
+        .info {
+            border: solid #d2d5d5 2px;
+        }
+
+        .info:hover {
+            background-color: #d6dee8;
+        }
+
+        .label {
+            font-family: "Microsoft YaHei UI";
+            height: 30px;
+            font-size: 20px;
+            color: white;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group-addon {
+            font-family: "Microsoft YaHei UI Light";
+            font-size: 18px;
+        }
+
+        textarea {
+            font-family: "Microsoft YaHei UI";
+            border: 0;
+            font-size: 20px;
+        }
+
+        .upload {
+            vertical-align: middle;
+            display: inline-block;
+            font-size: 15px;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .imgtoupload,
+        .imgtoshow {
+            border-radius: 5px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .sum-item {
+            width: 80%;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="main" style="width:100%;height:auto;padding: 10px;height: auto">
+    <div style="width: 90%;margin: 0 auto">
+        <div style="width: 100%;height:auto;top:120px;margin: 0 auto;float: left">
+            <div style="height:auto;float: left;">
+                <span style="font-size: 15px; display: inline">银行</span>
+                <select v-on:change="changeBank" class="uk-button uk-button-primary"
+                        style="font-size: 15px; height: 50px;width: 150px;margin: 20px; display: inline">
+                    <option v-for="app in apps" :value="app.bank_name">{{ app.bank_name }}</option>
+                </select>
+            </div>
+            <div style="width:auto;height:auto;float: left">
+                <span style="font-size: 15px;">版本</span>
+                <select @change="setInfo" class="uk-button uk-button-primary"
+                        style="font-size: 15px; height: 50px;width: auto;margin: 20px;">
+                    <option v-for="ver in vers" :value="ver.ver">{{ ver.ver }}</option>
+                </select>
+            </div>
+            <div style="width:350px;height:auto;float:left;">
+                <button class="uk-button uk-button-large disabled"
+                        style="font-size: 15px;height: 50px;width: auto;margin: 20px;">发布时间：{{ update_time }}
+                </button>
+            </div>
+
+            <div style="height: auto;float: left">
+                <button type="button" @click="onModal" class="uk-button uk-button-large"
+                        style="font-size: 15px;height: 50px;width:auto;margin:20px">总结
+                </button>
+            </div>
+            <div style="height: auto;float: left;">
+                <button type="button" class="uk-button uk-button-large" @click='redirect'
+                        style="font-size: 15px;height: 50px;width: auto;margin: 20px;">
+                    时间轴
+                </button>
+            </div>
+        </div>
+        <!--头部：选公司、版本-->
+    </div>
+
+    <div id="summary" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="height: 400px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">版本总结</h4>
+                </div>
+                <form id="sum" method="post" target="sumframe" style="width: 100%;height: 70%;">
+                    <div class="modal-body" style="width: 100%;height: 100%;">
+                        <div style="overflow-y:auto;margin: 0 auto; width:100%;height:100%;text-align: center;">
+                            <div class="sum-item" v-for="(i,index) in sum_items">
+                                <input :name="'sum-input'+index" style="width: 70%;" class="uk-button uk-button-default"
+                                       :value="i.item">
+                                <button onclick="remove_item(this)" type="button"
+                                        class="uk-button uk-button-small uk-button-danger"><span
+                                        class="glyphicon glyphicon-remove"></span></button>
+                            </div>
+
+                            <button id="add-item" type="button" @click="add_input" class="uk-button uk-button-small"
+                                    style="width:200px;margin: 0 auto;margin-top:20px"><span
+                                    class="glyphicon glyphicon-plus"></span></button>
+                        </div>
+
+                    </div>
+                </form>
+                <iframe id="sumframe" name="sumframe" style="display: none;"></iframe>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" @click="submit_sum">保存</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div style="width: 100%;height: auto;" v-for="(item, index) in version_infos">
+        <!--循环-->
+        <form :id="'form'+item.id" method="post" :target="'iframe'+index" style="height: auto;float: left">
+            <div style="width:100%;height: auto;margin: 0 auto;float: left;top:30px">
+                <div class="panel panel-default"
+                     style="width: 80%;height:100px;margin: auto;margin-top: 30px;margin-bottom: 30px">
+                    <!--更新特性 保存删除按钮-->
+                    <textarea style="width: 80%" name="feature" :value="item.feature"></textarea>
+                    <div style="float: right;display: inline;margin-top: 10px;margin-right: 10px">
+                        <button type="button" :id="'save'+item.id" class="uk-button-primary uk-button-small"
+                                @click="submit_form">保存
+                        </button>
+                        <button type="button" :id="'del'+index" class="uk-button-danger uk-button-small"
+                                @click="del_form">删除
+                        </button>
+                    </div>
+                </div>
+                <!--更新特性 保存/删除按钮-->
+                <div style="height: auto;margin: 0 auto;width: 80%;top:200px">
+                    <!--其他input-->
+                    <!--style="width: 310px;height:auto;float: left"-->
+                    <div style="width: 310px;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">功能</span>
+                            <input class="info" name="func" :value="item.func">
+                        </div>
+                    </div>
+                    <div style="width: 310px;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">变化</span>
+                            <input class="info" name="chg" :value="item.chg">
+                        </div>
+                    </div>
+                    <div style="width: 310px;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">特色分类</span>
+                            <input class="info" name="special" :value="item.special">
+                        </div>
+                    </div>
+                    <div style="width: 100%;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">分析（增效/目的）</span>
+                            <input class="info" name="analysis" style="width: 83%"
+                                   :value="item.analysis">
+                        </div>
+                    </div>
+                    <div style="width: 100%;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">同业情况</span>
+                            <input class="info" name="ctpart" style="width: 84%" :value="item.ctpart">
+                        </div>
+                    </div>
+                    <div style="width: 400px;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">测评类别</span>
+                            <input class="info" name="genre" style="width: 60%" :value="item.genre">
+                        </div>
+                    </div>
+                    <div style="width: 500px;height:auto;float: left">
+                        <div class="input-group">
+                            <span class="input-group-addon">指标/子项</span>
+                            <input class="info" name="target" style="width: 60%" :value="item.target">
+                        </div>
+                    </div>
+                </div>
+                <!--其他input-->
+            </div>
+            <div style="width: 100%;float: left;text-align: center">
+                <span style="font-size: 15px;">按住Ctrl可选择多张</span>
+                <input type="file" :id="'input'+item.id" class="upload" name="files"
+                       multiple="multiple" style="display: inline" @change="show_img">
+                <div style="width: 80%;margin: 0 auto">
+                    <div style="width: 100%;height: auto;margin: 0 auto;float:left">
+                        <div v-for="index of img_num[item.id]" class="imgtoupload"
+                             style="width: 100px;height: auto;float: left;margin: 20px">
+                            <!--							<img @click="drop_img" src="http://localhost:8080/delete_img.jpeg"-->
+                            <!--								 style="width: 30px;height: 30px;position: relative;left: 50px;top: 20px">-->
+                            <img @click="show" style="height: 200px;width: 100px">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div style="width: 100%;float: left;text-align: center">
+            <!--显示已上传的图片-->
+            <div style="width: 80%;margin: 0 auto">
+                <div style="width: 100%;height: auto;margin: 0 auto;float:left">
+                    <div v-for="i in imgs[item.id]" class="imgloaded"
+                         style="width: 250px;height: auto;float: left;margin: 20px">
+                        <img @click="drop_img" src="http://192.168.0.47:8080/delete_img.png"
+                             style="width: 30px;height: 30px;position: relative;left: 220px;top: -190px">
+                        <img :src="'http://192.168.0.47:8080/img?path='+i.imgpath" @click="show" class="imgtoshow"
+                             style="height: 400px;width: 200px">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <iframe :id="'iframe'+index" :name="'iframe'+index" style="display: none"></iframe>
+
+        <div style="width: 100%;float: left;height: auto">
+            <!--分隔线-->
+            <div class="uk-divider-icon" style="width: 80%;margin: 0 auto"></div>
+        </div>
+        <!--分隔线-->
+    </div>
+</div>
+
+<script type="text/javascript">
+    //删除一条总结条目
+    var remove_item = (e) => {
+        $(e).parent().remove()
+    }
+
+    const vm = new Vue({
+        el: '#main',
+        data: {
+            apps: null,
+            vers: null,
+            current_bank: null,
+            current_version: null,
+            update_time: null,
+            version_infos: null,
+            items: null,
+            imgs: {},
+            img_num: {},
+            dialogFormVisible: false,
+            sum_item_count: 0,
+            sum_items: null
+        },
+        created: function () {
+            axios
+                .get(`http://192.168.0.47:8080/apps`)
+                .then(response => {
+                    this.apps = response.data
+                    this.current_bank = this.apps[0].bank_name
+                    axios
+                        .get(`http://192.168.0.47:8080/vernum?name=` + this.current_bank)
+                        .then(response => {
+                            this.vers = response.data.results
+                            this.current_version = this.vers[0].ver
+                            axios
+                                .get(`http://192.168.0.47:8080/verinfo?name=${this.current_bank}&ver=${this.vers[0].ver}`)
+                                .then(response => {
+                                    this.version_infos = response.data
+                                    if (response.data.length > 0) {
+                                        this.update_time = response.data[0].update_time.substr(0, 10)
+                                    }
+
+                                    for (let t of this.version_infos) {
+                                        this.load_img(t.id)
+                                    }
+
+                                })
+                            axios.get(`http://192.168.0.47:8080/sum?name=${this.current_bank}&ver=${this.current_version}`)
+                                .then(response => {
+                                    new Promise((resolve, reject) => {
+                                        this.sum_items = response.data
+                                        resolve()
+                                    }).then(() => {
+                                        if (this.sum_item_count < $(".sum-item").length)
+                                            this.sum_item_count = $(".sum-item").length
+                                    })
+                                })
+                        })
+                })
+        },
+        methods: {
+            /*切换银行*/
+            changeBank: function (event) {
+                this.current_bank = event.target.value
+                this.imgs = {}
+                axios
+                    .get(`http://192.168.0.47:8080/vernum?name=` + this.current_bank)
+                    .then(res => {
+                        this.vers = res.data.results
+                        this.current_version = this.vers[0].ver
+                        axios
+                            .get(`http://192.168.0.47:8080/verinfo?name=${this.current_bank}&ver=${this.current_version}`)
+                            .then(response => {
+                                this.version_infos = response.data
+                                if (response.data.length > 0) {
+                                    this.update_time = response.data[0].update_time.substr(0, 10)
+                                }
+
+                                for (let t of this.version_infos) {
+                                    this.load_img(t.id)
+                                }
+                            })
+                        $(".sum-item").remove()
+                        this.sum_item_count = 0
+                        this.sum_items = {}
+                        axios.get(`http://192.168.0.47:8080/sum?name=${this.current_bank}&ver=${this.current_version}`)
+                            .then(response => {
+                                new Promise((resolve, reject) => {
+                                    this.sum_items = response.data
+                                    resolve()
+                                }).then(() => {
+                                    if (this.sum_item_count < $(".sum-item").length)
+                                        this.sum_item_count = $(".sum-item").length
+                                })
+                            })
+
+                    })
+            },
+            setInfo: function (event) {
+                this.current_version = event.target.value
+                this.imgs = {}
+                axios
+                    .get(`http://192.168.0.47:8080/verinfo?name=${this.current_bank}&ver=${this.current_version}`)
+                    .then(res => {
+                        this.version_infos = res.data
+                        if (res.data.length > 0)
+                            this.update_time = res.data[0].update_time.substr(0, 10)
+
+                        for (let t of this.version_infos) {
+                            this.load_img(t.id)
+                        }
+                    })
+
+                $(".sum-item").remove()
+                this.sum_item_count = 0
+                this.sum_items = {}
+                axios.get(`http://192.168.0.47:8080/sum?name=${this.current_bank}&ver=${this.current_version}`)
+                    .then(response => {
+                        new Promise((resolve, reject) => {
+                            this.sum_items = response.data
+                            resolve()
+                        }).then(() => {
+                            if (this.sum_item_count < $(".sum-item").length)
+                                this.sum_item_count = $(".sum-item").length
+                        })
+                    })
+            },
+            submit_form: function (event) {			//保存 提交form
+                let form_id = "form" + event.target.id.substr(4)
+                let id = event.target.id.substr(4)
+                $('#' + form_id).ajaxSubmit({
+                    type: 'POST',
+                    url: `http://192.168.0.47:8080/submit?name=` + this.current_bank + '&ver=' + this.current_version + '&feature=' + $('#' + form_id).children(":first").children(":first").children(":first").val(),
+                    success: function () {
+                        vm.imgs = new Object()
+                        vm.load_img(id)
+                        $("#" + form_id).find(".imgtoupload").each(function () {
+                            $(this).remove()
+                        })
+                        alert('保存成功！')
+                        vm.$set(vm.img_num, event.target.id.substr(4), 0)
+                    }
+                })
+            },
+            del_form: function (event) {
+                let feature = $(event.target).parent().prev().val()
+                let div = $(event.target).parent().parent().parent().parent().parent()
+                if (confirm('确定要删除吗？') == true) {
+                    axios
+                        .get(`http://192.168.0.47:8080/del?name=${this.current_bank}&ver=${this.current_version}&feature=${feature}`)
+                        .then(res => {
+                            div.remove()
+                        })
+                }
+            },
+            show_img: function (event) {
+                let i = 0;
+                let id = event.target.id.substr(5)
+                new Promise((resolve, reject) => {
+                    this.$set(this.img_num, id, event.target.files.length)
+                    resolve()
+                }).then(r => {
+                    for (; i < event.target.files.length; i++) {
+                        let src = window.URL.createObjectURL(event.target.files[i]);
+                        $($($($(event.target).next().children()[0]).children()[i]).children()[0]).attr('src', src)
+                    }
+                })
+
+            },
+            drop_img: function (event) {
+                let src = $(event.target).next().attr("src")
+                let name = src.split('=')[1]
+                if (confirm('确定要删除吗') == true) {
+                    axios.get(`http://192.168.0.47:8080/drop_img?name=${name}`).then(res => {
+                        $(event.target).parent().css('display', 'none')
+                    }).catch(err => {
+                        alert(err)
+                    })
+                }
+            },
+            load_img: function (id) {
+                axios
+                    .get(`http://192.168.0.47:8080/imgs?id=${id}`)
+                    .then(r => {
+                        this.$set(this.imgs, id, r.data)
+                    })
+            },
+            show: function (event) {
+                new Viewer(event.target, {
+                    toolbar: true,
+                    scalable: false,
+                    rotatable: false,
+                    prev: 0,
+                    next: 0
+                })
+            },
+            submit_sum: function (event) {
+                $("#sum").ajaxSubmit({
+                    type: 'post',
+                    url: `http://192.168.0.47:8080/submit_sum?name=${vm.current_bank}&ver=${vm.current_version}`,
+                    success: function () {
+                        alert('成功')
+                        $('#summary').modal('hide')
+                    }
+                })
+            },
+            onModal: function () {
+                $("#summary").modal()
+            },
+            add_input: function () {
+                $("#add-item").before('								<div class="sum-item">' +
+                    '<input name="sum-input' + (this.sum_item_count++) + '" style="width: 70%;" class="uk-button uk-button-default">' +
+                    '<button onclick="remove_item(this)" type="button" class="uk-button uk-button-small uk-button-danger"><span class="glyphicon glyphicon-remove"></span></button>' +
+                    '</div>')
+            },
+            redirect: function () {
+                window.open(`http://192.168.0.47:8080/timeline.html?name=${this.current_bank}`, '_blank')
+            }
+        }
+    })
+
+
+</script>
+
+</body>
+
+
+</html>
