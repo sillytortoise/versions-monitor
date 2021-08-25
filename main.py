@@ -3,7 +3,6 @@ import json
 import time
 from apps_info import apps as apps_list
 from bs4 import BeautifulSoup
-import html5lib
 import addtodb
 
 release_info = []

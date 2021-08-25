@@ -16,7 +16,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/viewerjs/1.10.0/viewer.common.js"></script>
-    <script type="text/javascript" src="./jquery.form.js"></script>
+    <script type="text/javascript" src="/jquery.form.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -95,14 +95,14 @@
         <div style="width: 100%;height:auto;top:120px;margin: 0 auto;float: left">
             <div style="height:auto;float: left;">
                 <span style="font-size: 15px; display: inline">银行</span>
-                <select v-on:change="changeBank" class="uk-button uk-button-primary"
+                <select @change="changeBank" class="uk-button uk-button-primary"
                         style="font-size: 15px; height: 50px;width: 150px;margin: 20px; display: inline">
                     <option v-for="app in apps" :value="app.bank_name">{{ app.bank_name }}</option>
                 </select>
             </div>
             <div style="width:auto;height:auto;float: left">
                 <span style="font-size: 15px;">版本</span>
-                <select @change="setInfo" class="uk-button uk-button-primary"
+                <select @change="setInfo" id="select-ver" class="uk-button uk-button-primary"
                         style="font-size: 15px; height: 50px;width: auto;margin: 20px;">
                     <option v-for="ver in vers" :value="ver.ver">{{ ver.ver }}</option>
                 </select>
@@ -166,7 +166,7 @@
 
     <div style="width: 100%;height: auto;" v-for="(item, index) in version_infos">
         <!--循环-->
-        <form :id="'form'+item.id" method="post" :target="'iframe'+index" style="height: auto;float: left">
+        <form :id="'form'+item.id" style="height: auto;float: left">
             <div style="width:100%;height: auto;margin: 0 auto;float: left;top:30px">
                 <div class="panel panel-default"
                      style="width: 80%;height:100px;margin: auto;margin-top: 30px;margin-bottom: 30px">
@@ -239,7 +239,7 @@
                     <div style="width: 100%;height: auto;margin: 0 auto;float:left">
                         <div v-for="index of img_num[item.id]" class="imgtoupload"
                              style="width: 100px;height: auto;float: left;margin: 20px">
-                            <!--							<img @click="drop_img" src="http://localhost:8080/delete_img.jpeg"-->
+                            <!--							<img @click="drop_img" src="/delete_img.jpeg"-->
                             <!--								 style="width: 30px;height: 30px;position: relative;left: 50px;top: 20px">-->
                             <img @click="show" style="height: 200px;width: 100px">
                         </div>
@@ -254,9 +254,9 @@
                 <div style="width: 100%;height: auto;margin: 0 auto;float:left">
                     <div v-for="i in imgs[item.id]" class="imgloaded"
                          style="width: 250px;height: auto;float: left;margin: 20px">
-                        <img @click="drop_img" src="http://192.168.0.47:8080/delete_img.png"
+                        <img @click="drop_img" src="/delete_img.png"
                              style="width: 30px;height: 30px;position: relative;left: 220px;top: -190px">
-                        <img :src="'http://192.168.0.47:8080/img?path='+i.imgpath" @click="show" class="imgtoshow"
+                        <img :src="'/img?path='+i.imgpath" @click="show" class="imgtoshow"
                              style="height: 400px;width: 200px">
                     </div>
                 </div>
@@ -296,17 +296,17 @@
         },
         created: function () {
             axios
-                .get(`http://192.168.0.47:8080/apps`)
+                .get(`/apps`)
                 .then(response => {
                     this.apps = response.data
                     this.current_bank = this.apps[0].bank_name
                     axios
-                        .get(`http://192.168.0.47:8080/vernum?name=` + this.current_bank)
+                        .get(`/vernum?name=` + this.current_bank)
                         .then(response => {
                             this.vers = response.data.results
                             this.current_version = this.vers[0].ver
                             axios
-                                .get(`http://192.168.0.47:8080/verinfo?name=${this.current_bank}&ver=${this.vers[0].ver}`)
+                                .get(`/verinfo?name=${this.current_bank}&ver=${this.vers[0].ver}`)
                                 .then(response => {
                                     this.version_infos = response.data
                                     if (response.data.length > 0) {
@@ -318,7 +318,7 @@
                                     }
 
                                 })
-                            axios.get(`http://192.168.0.47:8080/sum?name=${this.current_bank}&ver=${this.current_version}`)
+                            axios.get(`/sum?name=${this.current_bank}&ver=${this.current_version}`)
                                 .then(response => {
                                     new Promise((resolve, reject) => {
                                         this.sum_items = response.data
@@ -337,12 +337,13 @@
                 this.current_bank = event.target.value
                 this.imgs = {}
                 axios
-                    .get(`http://192.168.0.47:8080/vernum?name=` + this.current_bank)
+                    .get(`/vernum?name=` + this.current_bank)
                     .then(res => {
                         this.vers = res.data.results
                         this.current_version = this.vers[0].ver
+                        $("#select-ver").val(this.current_version)
                         axios
-                            .get(`http://192.168.0.47:8080/verinfo?name=${this.current_bank}&ver=${this.current_version}`)
+                            .get(`/verinfo?name=${this.current_bank}&ver=${this.current_version}`)
                             .then(response => {
                                 this.version_infos = response.data
                                 if (response.data.length > 0) {
@@ -356,7 +357,7 @@
                         $(".sum-item").remove()
                         this.sum_item_count = 0
                         this.sum_items = {}
-                        axios.get(`http://192.168.0.47:8080/sum?name=${this.current_bank}&ver=${this.current_version}`)
+                        axios.get(`/sum?name=${this.current_bank}&ver=${this.current_version}`)
                             .then(response => {
                                 new Promise((resolve, reject) => {
                                     this.sum_items = response.data
@@ -373,7 +374,7 @@
                 this.current_version = event.target.value
                 this.imgs = {}
                 axios
-                    .get(`http://192.168.0.47:8080/verinfo?name=${this.current_bank}&ver=${this.current_version}`)
+                    .get(`/verinfo?name=${this.current_bank}&ver=${this.current_version}`)
                     .then(res => {
                         this.version_infos = res.data
                         if (res.data.length > 0)
@@ -387,7 +388,7 @@
                 $(".sum-item").remove()
                 this.sum_item_count = 0
                 this.sum_items = {}
-                axios.get(`http://192.168.0.47:8080/sum?name=${this.current_bank}&ver=${this.current_version}`)
+                axios.get(`/sum?name=${this.current_bank}&ver=${this.current_version}`)
                     .then(response => {
                         new Promise((resolve, reject) => {
                             this.sum_items = response.data
@@ -403,8 +404,11 @@
                 let id = event.target.id.substr(4)
                 $('#' + form_id).ajaxSubmit({
                     type: 'POST',
-                    url: `http://192.168.0.47:8080/submit?name=` + this.current_bank + '&ver=' + this.current_version + '&feature=' + $('#' + form_id).children(":first").children(":first").children(":first").val(),
+                    url: `/submit?name=` + this.current_bank + '&ver=' + this.current_version + '&feature=' + $('#' + form_id).children(":first").children(":first").children(":first").val(),
                     success: function () {
+                        console.log(vm.version_infos)
+                        console.log(id)
+                        //vm.version_infos[parseInt(id)].func=$($('#'+form_id+' .info')[0]).val()
                         vm.imgs = new Object()
                         vm.load_img(id)
                         $("#" + form_id).find(".imgtoupload").each(function () {
@@ -420,7 +424,7 @@
                 let div = $(event.target).parent().parent().parent().parent().parent()
                 if (confirm('确定要删除吗？') == true) {
                     axios
-                        .get(`http://192.168.0.47:8080/del?name=${this.current_bank}&ver=${this.current_version}&feature=${feature}`)
+                        .get(`/del?name=${this.current_bank}&ver=${this.current_version}&feature=${feature}`)
                         .then(res => {
                             div.remove()
                         })
@@ -444,7 +448,7 @@
                 let src = $(event.target).next().attr("src")
                 let name = src.split('=')[1]
                 if (confirm('确定要删除吗') == true) {
-                    axios.get(`http://192.168.0.47:8080/drop_img?name=${name}`).then(res => {
+                    axios.get(`/drop_img?name=${name}`).then(res => {
                         $(event.target).parent().css('display', 'none')
                     }).catch(err => {
                         alert(err)
@@ -453,7 +457,7 @@
             },
             load_img: function (id) {
                 axios
-                    .get(`http://192.168.0.47:8080/imgs?id=${id}`)
+                    .get(`/imgs?id=${id}`)
                     .then(r => {
                         this.$set(this.imgs, id, r.data)
                     })
@@ -470,7 +474,7 @@
             submit_sum: function (event) {
                 $("#sum").ajaxSubmit({
                     type: 'post',
-                    url: `http://192.168.0.47:8080/submit_sum?name=${vm.current_bank}&ver=${vm.current_version}`,
+                    url: `/submit_sum?name=${vm.current_bank}&ver=${vm.current_version}`,
                     success: function () {
                         alert('成功')
                         $('#summary').modal('hide')
@@ -487,7 +491,7 @@
                     '</div>')
             },
             redirect: function () {
-                window.open(`http://192.168.0.47:8080/timeline.html?name=${this.current_bank}`, '_blank')
+                window.open(`http://172.16.11.22:8080/timeline.html?name=${this.current_bank}`, '_blank')
             }
         }
     })

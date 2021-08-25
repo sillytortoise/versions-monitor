@@ -1,0 +1,54 @@
+
+Running node-supervisor with
+  program 'index.js'
+  --watch '.'
+  --extensions 'node,js'
+  --exec 'node'
+
+Starting child process with 'node index.js'
+Watching directory '/root/versions-monitor' for changes.
+Press rs for restarting the process.
+服务器运行在 localhost:8080
+--->>  /
+--->>  /jquery.form.js
+--->>  /delete_img.png
+--->>  /apps
+--->>  /vernum?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC
+--->>  /verinfo?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701
+--->>  /sum?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701
+--->>  /imgs?id=39
+--->>  /imgs?id=40
+--->>  /img?path=upload_3c5b0c8db2f26f5b8556db10c6d9815b.jpeg
+--->>  /img?path=upload_9d283f1f99781c989f542df09b5daf6b.jpeg
+--->>  /submit?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701&feature=%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D
+--->>  /imgs?id=39
+--->>  /
+--->>  /jquery.form.js
+--->>  /delete_img.png
+--->>  /apps
+--->>  /favicon.ico
+--->>  /vernum?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC
+--->>  /verinfo?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701
+--->>  /sum?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701
+--->>  /imgs?id=39
+--->>  /imgs?id=40
+--->>  /img?path=upload_3c5b0c8db2f26f5b8556db10c6d9815b.jpeg
+--->>  /img?path=upload_9d283f1f99781c989f542df09b5daf6b.jpeg
+--->>  /submit?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701&feature=%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D
+--->>  /imgs?id=39
+--->>  /
+--->>  /jquery.form.js
+--->>  /delete_img.png
+--->>  /apps
+--->>  /vernum?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC
+--->>  /favicon.ico
+--->>  /verinfo?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701
+--->>  /sum?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701
+--->>  /imgs?id=39
+--->>  /imgs?id=40
+--->>  /img?path=upload_9d283f1f99781c989f542df09b5daf6b.jpeg
+--->>  /img?path=upload_3c5b0c8db2f26f5b8556db10c6d9815b.jpeg
+--->>  /submit?name=%E7%BD%91%E5%95%86%E9%93%B6%E2%80%AA%E8%A1%8C%E2%80%AC&ver=3.6.5.070701&feature=%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D
+--->>  /imgs?id=39
+Received SIGINT, killing child process...
+Parent process exiting, terminating child...

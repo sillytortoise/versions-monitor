@@ -22,8 +22,8 @@ const server = http.createServer((req, res) => {
     let conn = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: '',
-        database: 'sys'
+        password: '980115',
+        database: 'versions'
     })
     conn.connect()
 

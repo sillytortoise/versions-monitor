@@ -112,7 +112,7 @@
             }
         },
         created: function () {
-            axios.get(`http://192.168.0.47:8080/timeline?name=${this.bank_name}`).then(res => {
+            axios.get(`/timeline?name=${this.bank_name}`).then(res => {
                 this.timeline = res.data
             })
         },

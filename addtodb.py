@@ -5,9 +5,9 @@ import json
 
 host = 'localhost'
 port = 3306
-db = 'sys'
+db = 'versions'
 user = 'root'
-pwd = ''
+pwd = '980115'
 
 
 def isindb(cursor, id, ver):
@@ -27,7 +27,7 @@ def getconn():
 def insert():
     conn = getconn()
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    cursor.execute('use sys')
+    cursor.execute('use versions')
     try:
         with open('versions_info.json', 'r', encoding='utf-8') as f:
             apps = json.load(f)
@@ -46,9 +46,10 @@ def insert():
                         # if re.match(pattern, feature) is not None:
                         if feature != '':
                             cursor.execute(insert_sql % (bank_name, bank_id, ver, update_time, feature))
-                        # print(insert_sql % (bank_name, bank_id, ver, update_time, feature))
+                            print(insert_sql % (bank_name, bank_id, ver, update_time, feature))
         conn.commit()
-    except:
+    except ValueError:
+        raise(valueError)
         cursor.close()
         conn.rollback()
 
