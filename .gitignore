@@ -1,3 +1,6 @@
 /axios*
 /node_modules
-/__pycache__
+/__pycache_
+/.idea
+/.vscode
+/img
